@@ -68,8 +68,9 @@ def pisar_elemento(M,e):
                 vector[i]=-1
     return M                
 
-M=np.array([[0, 1, 2, 3], [4, 5, 6, 7]])
+M=np.linalg.inv([[1,0,-1,0], [0,0,1,0],[2,1,-2,3],[3,1,-1,3]])
 e=2
+print(M)
 print(pisar_elemento(M,e))
 
 
@@ -89,6 +90,7 @@ def leer_parque(nombre_archivo,parque):
     
 print(leer_parque("arbolado-en-espacios-verdes.csv",'GENERAL PAZ'))
 b=leer_parque("arbolado-en-espacios-verdes.csv",'GENERAL PAZ')
+
 
 def especies(lista_arboles):
     especias=set()
@@ -153,7 +155,7 @@ d7.set_index('lu', inplace = True)
 print(d7)
 
 df2=pd.DataFrame(data=M)
-df2=pd.DataFrame(M,columns=['a','b','c','d'],index=['primer','segundo'])
+df2=pd.DataFrame(M,columns=['a','b','c','d'],index=['primer','segundo',"3","4"])
 print(df2)
 
 fname='/users/Guille/Desktop/tpguille/python/arbolado-publico-lineal-2017-2018.csv'
@@ -176,3 +178,16 @@ data_arboles_veredas["Ambiente"]="Vereda"
 print(data_arboles_veredas)
 
 
+archivo="arbolado-en-espacios-verdes.csv"
+Dat=pd.read_csv(archivo)
+Data=Dat[(Dat["nombre_com"]=="Palo borracho rosado")]
+Cantidad=len(Data) #cantidad de filas
+Maximo=Data["altura_tot"].max()
+Minimo=Data["altura_tot"].min()
+
+
+pruebas=pd.read_csv("cronograma_sugerido.csv")
+
+new=pruebas.replace({'Correlatividad de Asignaturas': {"CBC":"Anterior"}})
+pd.concat([pruebas,new])
+print(pruebas)
