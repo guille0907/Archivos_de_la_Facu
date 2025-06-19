@@ -12,11 +12,6 @@ import seaborn as sns
 import numpy as np
 from sklearn import tree
 import pandas as pd
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import train_test_split
-from sklearn import metrics
-import numpy as np
-import duckdb as dd
 
 #%%######################
 
@@ -245,7 +240,7 @@ X = df[['altura_tot', 'diametro', 'inclinacio']]
 y = df['nombre_com']
 
 # 2) Train/Test split
-X_trai, X_tet, y_rain, y_test = train_test_split(
+X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.3, random_state=42, stratify=y
 )
 
@@ -258,8 +253,8 @@ for criterion in ['gini', 'entropy']:
             max_depth=max_depth,
             random_state=42
         )
-        clf.fit(X_trai, y_rain)
-        y_pred = clf.predict(X_tet)
+        clf.fit(X_train, y_train)
+        y_pred = clf.predict(X_test)
         acc = accuracy_score(y_test, y_pred)
         resultados.append({
             'criterion': criterion,
@@ -273,97 +268,6 @@ print(res_df.sort_values(['criterion','max_depth']))
 
 
 
-titanic=pd.read_csv('/users/Guille/Downloads/titanic_training.csv')
-x1=titanic[['Pclass','Sex','Age']]
-y1=titanic['Survived']
-x1['Sex'] = x1['Sex'].map({'male': 0, 'female': 1})
-
-x1['Age'].fillna(x1['Age'].median(), inplace=True)
-
-
-
-X_train, X_test, y_train, y_test = train_test_split(x1, y1, test_size=0.2)
-arbol=DecisionTreeClassifier(criterion='entropy'   ,max_depth=6)
-arbol.fit(X_train,y_train)
-Y_pred=arbol.predict(X_test)
-a=metrics.accuracy_score(y_test,Y_pred)
-print(metrics.confusion_matrix(y_test, Y_pred))
-print(a)
-
-def matriz_confusion_binaria(y_test, y_pred):
-    tp = fp = tn = fn = 0
-    for i in range(len(y_test)):
-        if y_test[i]:
-            if y_pred[i]:
-                tp += 1
-            else:
-                fn += 1
-        else:
-            if y_pred[i]:
-                fp += 1
-            else:
-                tn += 1
-    return tp, tn, fp, fn
-
-def accuracy_score(tp, tn, fp, fn):
-    acc = (tp+tn)/(tp+tn+fp+fn)
-    return acc
-
-def precision_score(tp, tn, fp, fn):
-    prec = tp/(tp+fp)
-    return prec
-
-def recall_score(tp, tn, fp, fn):
-    rec = tp/(tp+fn)
-    return rec
-
-def f1_score(tp, tn, fp, fn):
-    prec = precision_score(tp, tn, fp, fn)
-    rec = recall_score(tp, tn, fp, fn)
-    f1 = 2*prec*rec/(prec+rec)
-    return f1
-
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-
-acc = accuracy_score(y_test, Y_pred)
-prec = precision_score(y_test, Y_pred)
-rec = recall_score(y_test, Y_pred)
-f1 = f1_score(y_test, Y_pred)
-
-print(f"Accuracy: {acc:.4f}")
-print(f"Precision: {prec:.4f}")
-print(f"Recall: {rec:.4f}")
-print(f"F1 Score: {f1:.4f}")
-
-
-
-import pandas as pd
-
-df_sucursales = pd.DataFrame({
-    "N_sucursal": [123, 52, 107, 141],
-    "Barrio": ["Palermo", "Villa Crespo", "Belgrano", "Palermo"],
-    "Cant_Cajeros": [2, 4, 3, 3],
-    "Cant_Cajas": [3, 3, 2, 4]
-})
-
-df_zonas = pd.DataFrame({
-    "Barrio": ["Belgrano", "Caballito", "Flores", "Palermo", "Palermo"],
-    "Zona": ["Norte", "Sur", "Sur", "Norte", "Sur"],
-    "Ciudad": ["CABA"] * 5,
-    "Codigo_Postal": [1411, 1406, 1321, 1418, 1425]
-})
-
-
-c="""
- SELECT s.Barrio,COUNT(*) as TotalSUCU,SUM(s.Cant_Cajeros) as TotalCAJEROS
- FROM df_sucursales as s 
- INNER JOIN df_zonas as z ON s.Barrio=z.Barrio
- GROUP BY s.Barrio
- HAVING TotalCAJEROS > 3
- ORDER BY s.Barrio ASC
-"""
-res=dd.sql(c).df()
-print(res)
 
 
 
@@ -386,3 +290,10 @@ print(res)
 
 
 
+
+
+
+
+
+
+# %%
